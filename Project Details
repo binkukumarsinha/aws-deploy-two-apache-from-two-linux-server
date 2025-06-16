@@ -1,8 +1,163 @@
-Project Details: 
-Objective: Create a web application and deploy it on an EC2 instance using different Linux 
-distributions. 
+# Project Details: 
+# Objective: 
+- Create a web application and deploy it on an EC2 instance using different Linux distributions. 
 The web application must include at least 3 HTML pages. 
 Load Balancing must be implemented for the deployed application. 
 The deployment process should involve different AWS IAM users—each user should deploy a 
 separate instance of the web application. 
 The website should be set up and managed by these different IAM users accordingly.
+
+
+
+
+# -:AWS PROJECT:- 
+
+—--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+Deployment: 
+To do this project we need to login into AWS Console with the Root Id.Then need to go to The 
+IAM Dashboard to create the Users and the groups. As bellow: 
+IAM Dashboard: 
+Users list: 
+We created two users mentioned above. And these users are added with groups for their 
+specified permissions.. 
+Group Name and Permissions With user name: 
+AdminG group: 
+This is the Admin group named AdminG and user1 is added to this group who has the full 
+permission to maintain all the services as EC2 Instance, IAM ….. 
+DevOps group: 
+This is the Normal group named DevOps and user2 is added to this group who has only the 
+read-only permission. 
+For the rest of the process we need to go into EC2 Service by searching in the search bar. As 
+bellow: 
+Now at first we have to configure the Load Balancers and the Target Groups from the Load 
+Balancing option which is in the left side and in the third position from bottom of EC2 Options 
+menu. As bellow: 
+Here we can see the three options as listed on the above picture: 
+1. Load Balancers 
+2. Target Groups 
+3. Trust Stores 
+Before configuring the Load Balancers , we need to configure the Target Groups first. So we 
+click the 2nd option for Target Groups . 
+Target Group Dashboard: 
+If we don’t have any created group, then we need to create groups by clicking the Create target 
+group (as shown in the above picture) . But we have created a group named TargetG. 
+As we have created the Target Group. Now I need to configure the Load Balancers. After 
+clicking the Load Balancers we would see the manu as Create load balancer . By clicking that 
+menu there will be displayed three new menus to create the load balancer as 1.HTTP, HTTPS, 
+2.TCP, UDP, TLS, 3. GWLB respectively . But we need  the 1st one for this project . 
+After this, there will be some queries that we need to fill properly to create a loader.  
+Select the Target Group: 
+This is why we need to create the Target Group first. Here we have to select or create the 
+Target Group to fulfill the criteria to create the Load Balancer . 
+Now we need to configure the Security Groups for Inbound rules Outbound rules. Only 
+allow the HTTP connections for the Port 80. As below: 
+Inbound Rules: 
+Outbound Rules: 
+Now we will go for creating the EC2 Instances and click the Launch instance as showing 
+below: 
+Then we will type the instance or the server name as our choice . And also select the Amazon 
+Machine Image (AMI) according to our needs or requirements . Need to remember that the 
+Firewall (Security Groups) alway be the same as shown below in the picture for accessing 
+multiple Apache Servers. Need to check all the boxes as it may be needed in the future (both 
+HTTP and HTTPS) to secure our server or website by applying the SSL Certificate. 
+After creating the EC2 Instance need to wait a few seconds or minutes as it will take time to 
+initialize the instance to use . Then login into the server by connecting. 
+After successfully login into the server, need to configure the apache2 service by some 
+commands . The commands given below: 
+Redhat based: 
+$sudo su    —------ (For root access) 
+#yum update -y    —-- (To update the system . ) 
+#yum install httpd -y  —--- (To install apache2 server into the system) 
+#systemctl status httpd —--(To check the status the service is running or not)  
+#systemctl start httpd  —-- (To start the service if not started) 
+#cd /var/www/html  —--- (The default location of apache server where we need to add the web 
+pages ) 
+#echo “<head>This is the page 1 from the server 1</head>” > page1.html  —--- (First page with 
+the extension of .html) 
+#echo “<head>This is the page 2 from the server 1</head>” > page2.html  —--- (Second page 
+with the extension of .html) 
+#echo “<head>This is the page 3 from the server 1</head>” > page3.html  —--- (Third page with 
+the extension of .html) 
+#systemctl restart apache2  —-- (To restart the service to the updation and execution of the 
+pages into the web server) 
+# 
+1st Server is Amazon Linux: 
+15.207.221.15 This is the Public address of server 1 
+Debian or Ubuntu based: 
+$sudo su    —------ (For root access) 
+#apt update -y    —-- (To update the system . ) 
+#apt install apache2  —--- (To install apache2 server into the systemc) 
+#stemctl status apache2 —--(To check the status the service is running or not)  
+#systemctl start apache2  —-- (To start the service if not started) 
+#cd /var/www/html  —--- (The default location of apache server where we need to add the web 
+pages ) 
+#echo “<head>This is 1st  page  from the server 1</head>” > index1.html  —--- (First page with 
+the extension of .html) 
+#echo “<head>This is 2nd page from the server 1</head>” > index2.html  —--- (Second page 
+with the extension of .html) 
+#echo “<head>This is 3rd page from the server 1</head>” > index3.html  —--- (Third page with 
+the extension of .html) 
+#systemctl restart apache2  —-- (To restart the service to the updation and execution of the 
+pages into the web server) 
+# 
+2nd Server is Ubuntu: 
+13.200.222.252  This is the Public address of Server 2  
+The Dashboard of Load Balancers: 
+ 
+ 
+Here in the above picture , we can see lots of Links , each link is used for individual purposes. 
+So for our case , we just take the DNS for balancing the loader .  
+MainLoadBalancer-1483566536.ap-south-1.elb.amazonaws.com By this link we can now access each page of 
+that two servers’s web pages . just suffixing with the name of the page we want to access . as shown below:  
+ 
+By  suffixing with ‘/index2.html’ we can access data from server-2. 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+By suffixing with ‘/page2.html’ we can access the data from server-1 
+ 
+ 
+ 
+ 
+Every configuration is completed now let's check the permission by the user1 and the user2. 
+ 
+ 
+User1: user1 has successfully accessed the terminal of the server-1. user1 has the full 
+permission as Admin. 
+ 
+ 
+ 
+User2: user2 has no permission to access the terminal of any server, but has the read-only 
+permission. 
+ 
+ 
+ 
+ 
+ 
+ 
+The End 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
